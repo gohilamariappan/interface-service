@@ -1,4 +1,4 @@
-FROM node:18   # Node 17 is unstable
+FROM node:17
 
 RUN useradd -m appuser
 
