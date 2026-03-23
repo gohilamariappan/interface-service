@@ -1,27 +1,21 @@
 FROM node:17
 
-# Create user
 RUN useradd -m appuser
 
-# Create workdir
-WORKDIR /var/src
+WORKDIR /var/src/
 
-# Copy only package.json first (better layer caching)
-COPY ./src/package.json ./
+# Copy package.json
+COPY ./src/package.json .
 
-# If you use private packages
-# COPY .npmrc ./
-
-# Install deps
+# Install dependencies as root
 RUN npm install --unsafe-perm
 
-# Copy full source
-COPY --chown=appuser:appuser ./src .
+# Copy rest of files
+COPY ./src .
 
-# Set permissions AFTER copy
+# Fix permissions for non-root user
 RUN chown -R appuser:appuser /var/src
 
-# Switch to non-root
 USER appuser
 
 EXPOSE 3567
