@@ -2,18 +2,16 @@ FROM node:17
 
 RUN useradd -m appuser
 
-WORKDIR /var/src/
+WORKDIR /var/src
 
-# Copy package.json
-COPY ./src/package.json .
+# Copy entire src BEFORE npm install
+# So local file modules are available
+COPY ./src . 
 
 # Install dependencies as root
 RUN npm install --unsafe-perm
 
-# Copy rest of files
-COPY ./src .
-
-# Fix permissions for non-root user
+# Fix permissions
 RUN chown -R appuser:appuser /var/src
 
 USER appuser
