@@ -1,20 +1,18 @@
 FROM node:17
 
-RUN useradd -m appuser
+#Set working directory
+WORKDIR /var/src/
 
-WORKDIR /var/src
+#Copy package.json file
+COPY ./src/package.json .
 
-# 1. Copy entire src BEFORE install (important!)
+#Install node packages
+RUN npm install --unsafe-perm
+#Copy all files 
 COPY ./src .
 
-# 2. Install deps (root user)
-RUN npm install --unsafe-perm
-
-# 3. Fix permissions
-RUN chown -R appuser:appuser /var/src
-
-# 4. Run as non-root
-USER appuser
-
+#Expose the application port
 EXPOSE 3567
-CMD ["node", "app.js"]
+
+#Start the application
+CMD [ "node", "app.js" ]
