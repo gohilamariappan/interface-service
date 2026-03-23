@@ -4,16 +4,16 @@ RUN useradd -m appuser
 
 WORKDIR /var/src
 
-# Copy entire src BEFORE npm install
-# So local file modules are available
-COPY ./src . 
+# 1. Copy entire src BEFORE install (important!)
+COPY ./src .
 
-# Install dependencies as root
+# 2. Install deps (root user)
 RUN npm install --unsafe-perm
 
-# Fix permissions
+# 3. Fix permissions
 RUN chown -R appuser:appuser /var/src
 
+# 4. Run as non-root
 USER appuser
 
 EXPOSE 3567
